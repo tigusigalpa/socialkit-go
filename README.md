@@ -1,5 +1,7 @@
 # SocialKit Golang Client/SDK/Library
 
+![SocialKit Golang client sdk library](https://i.postimg.cc/pdYjbmLX/socialkit-go-hero-banner.jpg)
+
 [![CI](https://github.com/tigusigalpa/socialkit-go/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tigusigalpa/socialkit-go/actions/workflows/ci.yml)
 [![Tests](https://github.com/tigusigalpa/socialkit-go/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/tigusigalpa/socialkit-go/actions/workflows/test.yml)
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat-square&logo=go)](https://golang.org/)

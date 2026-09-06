@@ -28,22 +28,6 @@ func newTestClient(t *testing.T, handler http.HandlerFunc, opts ...Option) (*Cli
 	return c, srv
 }
 
-// writeJSON writes a JSON response with the given status code and body.
-func writeJSON(t *testing.T, w http.ResponseWriter, status int, body interface{}) {
-	t.Helper()
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	if s, ok := body.(string); ok {
-		if _, err := w.Write([]byte(s)); err != nil {
-			t.Errorf("failed to write test response: %v", err)
-		}
-		return
-	}
-	if err := json.NewEncoder(w).Encode(body); err != nil {
-		t.Errorf("failed to encode test response: %v", err)
-	}
-}
-
 // writeResponse writes an HTTP response body and reports an unexpected
 // write failure to the active test.
 func writeResponse(t *testing.T, w http.ResponseWriter, body string) {

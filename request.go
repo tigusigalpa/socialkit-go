@@ -19,69 +19,11 @@ import (
 // misbehaving servers.
 const maxErrorBodySize = 1 << 20 // 1 MB
 
-// queryValues builds a url.Values from optional typed values, skipping
-// any keys whose value pointer is nil. It is used internally by service
-// methods to translate request structs into query strings.
-type queryValues struct {
-	values url.Values
-}
-
-// newQueryValues creates an empty queryValues helper.
-func newQueryValues() *queryValues {
-	return &queryValues{values: url.Values{}}
-}
-
-// setString adds key=v to the query if v is non-nil.
-func (q *queryValues) setString(key string, v *string) {
-	if v != nil {
-		q.values.Set(key, *v)
-	}
-}
-
-// setInt adds key=v to the query if v is non-nil.
-func (q *queryValues) setInt(key string, v *int) {
-	if v != nil {
-		q.values.Set(key, strconv.Itoa(*v))
-	}
-}
-
-// setBool adds key=v to the query if v is non-nil.
-func (q *queryValues) setBool(key string, v *bool) {
-	if v != nil {
-		q.values.Set(key, strconv.FormatBool(*v))
-	}
-}
-
-// setFloat adds key=v to the query if v is non-nil.
-func (q *queryValues) setFloat(key string, v *float64) {
-	if v != nil {
-		q.values.Set(key, strconv.FormatFloat(*v, 'f', -1, 64))
-	}
-}
-
-// Values returns the underlying url.Values.
-func (q *queryValues) Values() url.Values {
-	return q.values
-}
-
 // escapePathSegment escapes a caller-provided value that occupies one URL
 // path segment. This prevents characters such as '/', '?', and '#' from
 // changing the endpoint being requested.
 func escapePathSegment(value string) string {
 	return url.PathEscape(value)
-}
-
-// doRequest performs an HTTP request against the SocialKit API and
-// decodes the JSON response body into out (if non-nil). It handles
-// authentication, query string construction, JSON error mapping, and
-// automatic retry with exponential backoff for HTTP 429 and 5xx
-// responses.
-//
-// path must be an absolute path beginning with "/" relative to the
-// client's configured base URL, e.g. "/youtube/transcript".
-func (c *Client) doRequest(ctx context.Context, method, path string, query url.Values, body interface{}, out interface{}) error {
-	_, err := c.doRequestWithMeta(ctx, method, path, query, body, out)
-	return err
 }
 
 // doRequestWithMeta performs an HTTP request against the SocialKit API,
@@ -316,13 +258,6 @@ func extractMessageAndCode(body []byte) (string, string) {
 		snippet = snippet[:200]
 	}
 	return snippet, ""
-}
-
-// extractMessage attempts to pull a human-readable message field out of
-// a JSON error response body. Kept for compatibility.
-func extractMessage(body []byte) string {
-	msg, _ := extractMessageAndCode(body)
-	return msg
 }
 
 // isRetryableStatus reports whether the given HTTP status code should
