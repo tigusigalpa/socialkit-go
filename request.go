@@ -132,7 +132,9 @@ func (c *Client) doRequestWithMeta(ctx context.Context, method, path string, que
 		} else {
 			respBody, err = io.ReadAll(io.LimitReader(resp.Body, maxErrorBodySize))
 		}
-		resp.Body.Close()
+		// The read result determines success; a cleanup error must not
+		// cause an already completed, potentially billable call to repeat.
+		_ = resp.Body.Close()
 		if err != nil {
 			meta := buildMeta(resp.StatusCode, resp.Header, nil)
 			return meta, fmt.Errorf("%w: %v", ErrDecode, err)

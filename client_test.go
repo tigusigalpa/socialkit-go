@@ -188,7 +188,6 @@ func TestDoRequest_RetryPreservesRequestBody(t *testing.T) {
 	attempts := 0
 	c, srv := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		attempts++
-		defer r.Body.Close()
 		var body map[string]string
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			t.Fatalf("failed to decode request body on attempt %d: %v", attempts, err)
